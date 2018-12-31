@@ -16,16 +16,17 @@ Debug:RCC_DIR       = $$PWD/bin/debug/.rcc
 Debug:UI_DIR        = $$PWD/bin/debug/.ui
 
 
-INCLUDEPATH += ./include
+INCLUDEPATH += ./pttoth/include \
+               ./pttoth
 
 #LIBS +=
 
 
 SOURCES += main.cpp \
     pttoth/src/config.cpp \
-    main.cpp
+    pttoth/test/test_config.hpp
 
 #HEADERS +=
 
 HEADERS += \
-    pttoth/include/config.h
+    pttoth/include/pttoth/config.h

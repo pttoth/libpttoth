@@ -1,4 +1,4 @@
-#include "config.h"
+#include "pttoth/config.h"
 
 #include <stdexcept>
 
@@ -79,12 +79,14 @@ std::string Config::
 
 std::string Config::
         getS(unsigned id) const{
+    /*
     for(entry& e : _entries){
         if(e.id == id){
             return e.val;
         }
     }
     throw std::logic_error("id not contained");
+    */
 }
 
 float Config::getF(unsigned id) const
