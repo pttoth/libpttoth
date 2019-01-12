@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <istream>
 
 namespace pttoth{
 
@@ -18,33 +19,25 @@ namespace pttoth{
             CFG_INSTANCE_NAME.addKey(ENUM_NAME, #ENUM_NAME);
 
 class Config{
-    struct entry{
-        unsigned int id;
-        std::string  str;
-        std::string  val;
-    };
-
-    std::vector<entry>  _entries;
-    std::string         _path;
-
 public:
-    Config();
-    Config(const Config& other);
-    Config(Config&& other);
-    virtual ~Config();
-    Config& operator=(const Config &other);
-    Config& operator=(Config &&other);
-    bool operator==(const Config &other)const;
+    Config()                    = default;
+    Config(const Config& other) = default;
+    Config(Config&& source);
+    virtual ~Config(){}
+    Config& operator=(const Config &other)  = default;
+    Config& operator=(Config &&source);
+    bool operator==(const Config &other) const  = delete;
 
-    void addKey(unsigned id, char const *name);
+    void        addKey(unsigned id, char const *name);
 
     void        read();
-    void        readS(const std::string& str);
     void        readF(char const *path);
     void        readF(const std::string& path);
+    void        readS(const std::string& str);
 
-    void        write() const;
-    void        write(const std::string& path)const;
+    void        write();
+    void        writeF(char const *path);
+    void        writeF(const std::string& path) const;
 
     void        setPath(const std::string& path);
     std::string getPath() const;
@@ -61,6 +54,35 @@ public:
     void        setI(unsigned id, int i);
     void        setC(unsigned id, char c);
 
+private:
+    struct entry{
+        unsigned int key_id;        //the key's actual enum as integer
+        std::string  key_str;       //enum id as string
+        std::string  val_str;       //string value associated with key
+    };
+
+    std::vector<entry>  _entries;   //the stored data
+    std::string         _path;      //file to read from and write to
+
+    bool hasPath() const;
+    bool fileExists(const std::string& path) const;
+
+    //TODO: make this generic, not class dependent
+    bool ValiatePath(const std::string& path);
+
+    std::string trimComments(const std::string& str) const;
+    bool isEmptyLine(const std::string& str) const;
+    bool splitEntry(const std::string& str, std::string* retval) const;
+    bool isRecognizedKey(const std::string& str) const;
+    int getKeyIndex(int eKey) const;
+    int getKeyIndex(const std::string& str) const;
+
+
+    //after the config was read from any input, we have it in a string
+    //this is the common processing function, which parses the expected
+    //  data from the string
+    void _processData(const std::string& data);
+    void _parseData(std::istream& stream);
 };
 
 }
