@@ -130,6 +130,15 @@ std::string Config::
     return _getData(eKey);
 }
 
+bool Config::
+        getB(int eKey) const{
+    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    if(       "true"  == stringToLower(data) ){ return true;
+    }else if( "false" == stringToLower(data) ){ return false;
+    }
+    throw std::invalid_argument("invalid config value");
+}
+
 float Config::
         getF(int eKey) const{
     std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
@@ -176,6 +185,14 @@ void Config::
         setS(int eKey, std::string &str){
     std::string& data = _getDataReference(eKey);
     data = str;
+}
+
+void Config::
+        setB(int eKey, bool b){
+    std::string& data = _getDataReference(eKey);
+    if(b){ data = "true";
+    }else{ data = "false";
+    }
 }
 
 void Config::

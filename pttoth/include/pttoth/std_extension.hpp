@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 namespace pttoth{
 
@@ -63,6 +64,21 @@ splitString(std::string* retval, const std::string& str){
     }
     return false;
 }
+
+inline std::string
+stringToLower(const std::string& str){
+    std::string data(str);
+    std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+    return std::move(data);
+}
+
+inline std::string
+stringToUpper(const std::string& str){
+    std::string data(str);
+    std::transform(data.begin(), data.end(), data.begin(), ::toupper);
+    return std::move(data);
+}
+
 
 } //end of namespace
 
