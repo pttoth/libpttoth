@@ -28,35 +28,33 @@ public:
     Config& operator=(Config &&source);
     bool operator==(const Config &other) const  = delete;
 
-    void        addKey(unsigned id, char const *name);
+    void        addKey(int eKey, char const *name); //throws std::invalid_argument
 
-    void        read();
-    void        readF(char const *path);
-    void        readF(const std::string& path);
-    void        readS(const std::string& str);
+    void        read();                         //throws std::invalid_argument, std::logic_error
+    void        readF(char const *path);        //throws std::invalid_argument
+    void        readF(const std::string& path); //throws std::invalid_argument
+    void        readS(const std::string& str);  //throws std::invalid_argument
 
-    void        write();
-    void        writeF(char const *path);
-    void        writeF(const std::string& path) const;
+    void        write();                                //throws std::invalid_argument, std::logic_error
+    void        writeF(char const *path);               //throws std::invalid_argument
+    void        writeF(const std::string& path) const;  //throws std::invalid_argument
 
     void        setPath(const std::string& path);
     std::string getPath() const;
 
-    std::string getS(unsigned id) const;
-    float       getF(unsigned id) const;
-    double      getD(unsigned id) const;
-    int         getI(unsigned id) const;
-    char        getC(unsigned id) const;
+    std::string getS(int eKey) const;           //throws std::invalid_argument
+    float       getF(int eKey) const;           //throws std::invalid_argument
+    double      getD(int eKey) const;           //throws std::invalid_argument
+    int         getI(int eKey) const;           //throws std::invalid_argument
 
-    void        setS(unsigned id, std::string& str);
-    void        setF(unsigned id, float f);
-    void        setD(unsigned id, double d);
-    void        setI(unsigned id, int i);
-    void        setC(unsigned id, char c);
+    void        setS(int eKey, std::string& str);   //throws std::invalid_argument
+    void        setF(int eKey, float f);            //throws std::invalid_argument
+    void        setD(int eKey, double d);           //throws std::invalid_argument
+    void        setI(int eKey, int i);              //throws std::invalid_argument
 
 private:
     struct entry{
-        unsigned int key_id;        //the key's actual enum as integer
+        int key_id;        //the key's actual enum as integer
         std::string  key_str;       //enum id as string
         std::string  val_str;       //string value associated with key
     };
@@ -64,18 +62,15 @@ private:
     std::vector<entry>  _entries;   //the stored data
     std::string         _path;      //file to read from and write to
 
-    bool hasPath() const;
-    bool fileExists(const std::string& path) const;
+    std::string  _getData(int eKey) const;
+    std::string& _getDataReference(int eKey);
 
-    //TODO: make this generic, not class dependent
-    bool ValiatePath(const std::string& path);
-
-    std::string trimComments(const std::string& str) const;
-    bool isEmptyLine(const std::string& str) const;
-    bool splitEntry(const std::string& str, std::string* retval) const;
-    bool isRecognizedKey(const std::string& str) const;
-    int getKeyIndex(int eKey) const;
-    int getKeyIndex(const std::string& str) const;
+    std::string _trimComments(const std::string& str) const;
+    bool _isValidChar(char c) const;
+    bool _isValidPath(const std::string& path) const;
+    bool _isEmptyLine(const std::string& str) const;
+    int _getKeyIndex(int eKey) const;
+    int _getKeyIndex(const std::string& str) const;
 
 
     //after the config was read from any input, we have it in a string

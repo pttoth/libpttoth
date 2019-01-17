@@ -29,4 +29,5 @@ SOURCES += main.cpp \
 #HEADERS +=
 
 HEADERS += \
-    pttoth/include/pttoth/config.h
+    pttoth/include/pttoth/config.h \
+    pttoth/include/pttoth/std_extension.hpp

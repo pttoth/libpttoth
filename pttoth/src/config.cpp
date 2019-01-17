@@ -7,6 +7,10 @@
 #include <iostream>
 #include <cstring>
 
+#include <float.h>
+
+#include "pttoth/std_extension.hpp"
+
 using namespace pttoth;
 
 Config::
@@ -23,8 +27,17 @@ Config &Config::
 }
 
 void Config::
-        addKey(unsigned id, const char *name){
-    printf("value added: %d, %s\n", id, name);
+        addKey(int eKey, const char *name){
+    int idx = _getKeyIndex(eKey);
+    if(-1 < idx){
+        throw std::invalid_argument("key already contained");
+    }else{
+        entry e;
+        e.key_id = eKey;
+        e.key_str = name;
+        _entries.push_back(e);
+        printf("value added: %d, %s\n", eKey, name);
+    }
 }
 
 void Config::
@@ -37,16 +50,21 @@ void Config::
 
 void Config::
         readF(const char *path){
-    std::ifstream ifs;
-
-    ifs.open(path);
-    if( !ifs.is_open() ){
-        std::string errormsg = "couldn't open file: ";
+    if( _isValidPath(path) ){
+        std::ifstream ifs;
+        ifs.open(path);
+        if( !ifs.is_open() ){
+            std::string errormsg = "could not open file";
+            errormsg += path;
+            throw std::invalid_argument( errormsg );
+        }
+        _parseData(ifs);
+        ifs.close();
+    }else{
+        std::string errormsg = "invalid path defined";
         errormsg += path;
         throw std::invalid_argument( errormsg );
     }
-
-    _parseData(ifs);
 }
 
 void Config::
@@ -62,17 +80,38 @@ void Config::
 
 void Config::
         write(){
-    //write(_path);
+    if( 0 == _path.length() ){
+        throw std::logic_error("no path defined");
+    }
+    writeF(_path);
 }
 
-void Config::writeF(const char *path)
-{
-
+void Config::
+        writeF(const char *path){
+    if( _isValidPath(path) ){
+        std::ofstream ofs(path);
+        if( !ofs.good() ){
+            std::cerr << "error opening file " << path << " for reading\n";
+        }
+        for(size_t i=0; i<_entries.size(); ++i){
+            entry& ent = _entries[i];
+            ofs << ent.key_str << "=" << ent.val_str << "\n";
+        }
+        ofs.close();
+    }else{
+        /*
+        std::string errormsg = "invalid path defined";
+        errormsg += path;
+        throw std::invalid_argument( errormsg );
+        */
+        //not necessary to throw exception, because it isn't a crash-type problem
+        std::cerr << "ERROR: invalid path defined when writing config file: " << path << "\n";
+    }
 }
 
-void Config::writeF(const std::string &path) const
-{
-
+void Config::
+        writeF(const std::string &path) const{
+    writeF( path.c_str() );
 }
 
 
@@ -87,87 +126,173 @@ std::string Config::
 }
 
 std::string Config::
-        getS(unsigned id) const{
-    /*
-    for(entry& e : _entries){
-        if(e.id == id){
-            return e.val;
-        }
+        getS(int eKey) const{
+    return _getData(eKey);
+}
+
+float Config::
+        getF(int eKey) const{
+    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    try{
+        return std::stof(data);
+    }catch(...){
+        //stof()/stod()/stoi() throw these
+        //  std::invalid_argument
+        //  std::out_of_range
+        //but a simple error will suffice instead
+        throw std::invalid_argument("invalid config value");
     }
-    throw std::logic_error("id not contained");
-    */
 }
 
-float Config::getF(unsigned id) const
-{
-
+double Config::
+        getD(int eKey) const{
+    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    try{
+        return std::stod(data);
+    }catch(...){
+        //stof()/stod()/stoi() throw these
+        //  std::invalid_argument
+        //  std::out_of_range
+        //but a simple error will suffice instead
+        throw std::invalid_argument("invalid config value");
+    }
 }
 
-double Config::getD(unsigned id) const
-{
-
+int Config::
+        getI(int eKey) const{
+    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    try{
+        return std::stoi(data);
+    }catch(...){
+        //stof()/stod()/stoi() throw these
+        //  std::invalid_argument
+        //  std::out_of_range
+        //but a simple error will suffice instead
+        throw std::invalid_argument("invalid config value");
+    }
 }
 
-int Config::getI(unsigned id) const
-{
-
+void Config::
+        setS(int eKey, std::string &str){
+    std::string& data = _getDataReference(eKey);
+    data = str;
 }
 
-char Config::getC(unsigned id) const
-{
-
+void Config::
+        setF(int eKey, float f){
+    std::string& data = _getDataReference(eKey);
+    char buf[64];
+    sprintf(buf, "%f", f);
+    data = buf;
 }
 
-bool Config::
-        hasPath() const{
-    return 0 < _path.length();
+void Config::
+        setD(int eKey, double d){
+    std::string& data = _getDataReference(eKey);
+    char buf[64];
+    sprintf(buf, "%lf", d);
+    data = buf;
 }
 
-bool Config::
-        fileExists(const std::string &path) const{
-
+void Config::
+        setI(int eKey, int i){
+    std::string& data = _getDataReference(eKey);
+    char buf[64];
+    sprintf(buf, "%d", i);
+    data = buf;
 }
 
 std::string Config::
-        trimComments(const std::string &str) const{
-    int idx_denom = str.find(";");
-    if(-1 < idx_denom){
+        _getData(int eKey) const{
+    int idx = _getKeyIndex(eKey);
+    if(-1 < idx){
+        return _entries[idx].val_str;
+    }
+    throw std::invalid_argument("unknown key");
+}
+
+std::string &Config::
+        _getDataReference(int eKey){
+    int idx = _getKeyIndex(eKey);
+    if(-1 < idx){
+        entry& ent = _entries[idx];
+        return ent.val_str;
+    }
+    throw std::invalid_argument("unknown key");
+}
+
+bool Config::
+        _isEmptyLine(const std::string &str) const{
+    for(char c : str){
+        if( !isspace(c) ){ return false; }
+    }
+    return true;
+}
+
+bool Config::
+        _isValidChar(char c) const{
+    char* valids = "_-./";
+    if( isalnum(c) ){ return true; } //A-Z, a-z, 0-9
+    for(size_t i=0; i<strlen(valids); ++i){
+        if( c == valids[i] ){ return true; }
+    }
+    return false;
+}
+
+bool Config::
+        _isValidPath(const std::string &path) const{
+    //the function restricts paths to these characters
+    //safe
+    //A-Z, a-z, 0-9
+    //_, -, ., /
+    //note: the function doesn't allow:
+        //'space' characters
+        //backslashes
+            //windows-type paths must be converted
+
+    //path cannot be empty
+    if( 0 == path.length()){
+        //cannot start with whitespace
+        if( isspace(path[0]) ){ return false; }
+
+        //path must be relative (not security reasons, but want to enforce it)
+        if( ('/' == path[0])            //cannot start with '/'
+          ||(std::string::npos != path.find(':'))       //cannot contain ':'
+//          ||(std::string::npos != path.find(".."))      //cannot contain ".." (may want to step back from /bin to a config dir)
+        ){
+            return false;
+        }
+    }
+
+    //mustn't contain illegal characters
+    for(char c : path){
+        if( !_isValidChar(c) ){
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string Config::
+        _trimComments(const std::string &str) const{
+    size_t idx_denom = str.find(";");
+    if(std::string::npos != idx_denom){
         return str.substr(0, idx_denom);
     }
     return str;
 }
 
-bool Config::
-        isEmptyLine(const std::string &str) const{
-    return str.length() == 0;
-}
-
-bool Config::
-        splitEntry(const std::string &str, std::string *retval) const{
-    //todo:
-    //  validate and split with regex
-    //  return value is success or fail (no exception handling)
-    std::cout << "MISSING IMPLEMENTATION: splitEntry()!\n";
-    return true;
-}
-
-bool Config::
-        isRecognizedKey(const std::string &str) const{
-
-}
-
 int Config::
-        getKeyIndex(int eKey) const{
-    for(int i=0; i<_entries.size(); ++i){
+        _getKeyIndex(int eKey) const{
+    for(size_t i=0; i<_entries.size(); ++i){
         if( eKey == _entries[i].key_id ) return i;
     }
     return -1;
 }
 
-
 int Config::
-        getKeyIndex(const std::string &str) const{
-    for(int i=0; i<_entries.size(); ++i){
+        _getKeyIndex(const std::string &str) const{
+    for(size_t i=0; i<_entries.size(); ++i){
         if( str == _entries[i].key_str ) return i;
     }
     return -1;
@@ -177,16 +302,23 @@ void Config::
         _processData(const std::string &data){
     std::stringstream ss(data);
     std::string line;
-    std::string cfg_text;
-    std::string cfg[2]; //[0]: key, [1]: val
+    std::string cfg;
+    std::string cfg_split[2]; //[0]: key, [1]: val
     while( std::getline(ss, line) ){
-        cfg_text = trimComments(line);
-        splitEntry(cfg_text, cfg);
-        int idx_key = getKeyIndex( cfg[0] );
-        if(-1 < idx_key){
-            _entries[idx_key].val_str = cfg[1];
-        }else{
-            std::cerr << "WARNING: unrecognized config key: " << cfg[0] << "\n";
+        cfg = _trimComments(line);
+        if( !_isEmptyLine(cfg) ){
+            if( splitString(cfg_split, cfg) ){
+                cfg_split[0] = trimWhitespaces(cfg_split[0]);
+                cfg_split[1] = trimWhitespaces(cfg_split[1]);
+                int idx = _getKeyIndex( cfg_split[0] );
+                if(-1 < idx){
+                    _entries[idx].val_str = cfg_split[1];
+                }else{
+                    std::cerr << "WARNING: unrecognized config key: " << cfg_split[0] << "\n";
+                }
+            }else{
+                std::cerr << "WARNING: could not interpret line: " << cfg << "\n";
+            }
         }
     }
 }
@@ -201,7 +333,7 @@ void Config::
     while( std::getline(stream, strbuf) ){
         if(0 < strbuf.length()){
             ss << strbuf << "\n";
-            expected_size += strbuf.size() + 1; //calculates size avoiding possible LF/CRLF errors later
+            expected_size += strbuf.size() + 1; //calculates size to avoid possible LF/CRLF errors later
         }
     }
 
