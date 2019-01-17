@@ -67,6 +67,9 @@ bool test_config::
 
 void test_config::
         testTrims(){
+    std::cout << "-----------------------------------\n";
+    std::cout << "---------testing Config------------\n";
+    std::cout << "-----------------------------------\n";
     _testTrimWhitespace(" \t    \t  ", "");
     _testTrimWhitespace("asd", "asd");
     _testTrimWhitespace("123", "123");
@@ -83,6 +86,7 @@ void test_config::
     _testTrimWhitespace("  asd", "asd");
     _testTrimWhitespace("asd  ", "asd");
     _testTrimWhitespace(" asd ", "asd");
+    std::cout << "-----------------------------------\n";
 }
 
 bool test_config::

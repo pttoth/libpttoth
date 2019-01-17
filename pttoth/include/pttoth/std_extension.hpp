@@ -1,3 +1,12 @@
+/** -----------------------------------------------------------------------------
+  * FILE:    std_extension.hpp
+  * AUTHOR:  pttoth
+  * EMAIL:   peter.t.toth92@gmail.com
+  * PURPOSE: Contains some utility functions
+  *             for which the standard STL methods are more or less messy
+  * -----------------------------------------------------------------------------
+  */
+
 #pragma once
 
 #include <cstddef>
@@ -55,14 +64,23 @@ trimWhitespaces(const std::string& str){
 }
 
 inline bool
-splitString(std::string* retval, const std::string& str){
-    size_t idx = str.find("=");
+splitString(std::string* retval,
+            const std::string& str,
+            char const *sequence){
+    size_t idx = str.find(sequence);
     if(std::string::npos != idx){
         retval[0] = str.substr(0, idx);
         retval[1] = str.substr(idx+1, str.length()-idx-1);
         return true;
     }
     return false;
+}
+
+inline bool
+splitString(std::string* retval,
+            const std::string& str,
+            const std::string& sequence){
+    return splitString(retval, str, sequence.c_str());
 }
 
 inline std::string

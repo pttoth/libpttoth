@@ -324,7 +324,7 @@ void Config::
     while( std::getline(ss, line) ){
         cfg = _trimComments(line);
         if( !_isEmptyLine(cfg) ){
-            if( splitString(cfg_split, cfg) ){
+            if( splitString(cfg_split, cfg, "=") ){
                 cfg_split[0] = trimWhitespaces(cfg_split[0]);
                 cfg_split[1] = trimWhitespaces(cfg_split[1]);
                 int idx = _getKeyIndex( cfg_split[0] );

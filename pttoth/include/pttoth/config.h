@@ -2,7 +2,7 @@
   * FILE:    config.h
   * AUTHOR:  pttoth
   * EMAIL:   peter.t.toth92@gmail.com
-  * PURPOSE:
+  * PURPOSE: Handles configuration files and their data
   * -----------------------------------------------------------------------------
   */
 
