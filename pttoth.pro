@@ -30,4 +30,5 @@ SOURCES += main.cpp \
 
 HEADERS += \
     pttoth/include/pttoth/config.h \
-    pttoth/include/pttoth/std_extension.hpp
+    pttoth/include/pttoth/std_extension.hpp \
+    pttoth/include/pttoth/event.hpp
