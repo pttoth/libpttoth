@@ -61,6 +61,9 @@ private:
         std::string  val_str;       //string value associated with key
     };
 
+    static char*        _sep_keyval  = "="; //key-value spearator string
+    static char*        _sep_valcom  = ";"; //value-comment spearator string
+
     std::vector<entry>  _entries;   //the stored data
     std::string         _path;      //file to read from and write to
 

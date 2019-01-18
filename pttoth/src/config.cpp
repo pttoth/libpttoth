@@ -292,7 +292,7 @@ bool Config::
 
 std::string Config::
         _trimComments(const std::string &str) const{
-    size_t idx_denom = str.find(";");
+    size_t idx_denom = str.find(sep_valcom);
     if(std::string::npos != idx_denom){
         return str.substr(0, idx_denom);
     }
@@ -324,7 +324,7 @@ void Config::
     while( std::getline(ss, line) ){
         cfg = _trimComments(line);
         if( !_isEmptyLine(cfg) ){
-            if( splitString(cfg_split, cfg, "=") ){
+            if( splitString(cfg_split, cfg, sep_keyval) ){
                 cfg_split[0] = trimWhitespaces(cfg_split[0]);
                 cfg_split[1] = trimWhitespaces(cfg_split[1]);
                 int idx = _getKeyIndex( cfg_split[0] );
