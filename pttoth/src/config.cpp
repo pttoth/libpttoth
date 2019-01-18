@@ -13,6 +13,9 @@
 
 using namespace pttoth;
 
+char* Config::_sep_keyval = "=";
+char* Config::_sep_valcom = ";";
+
 Config::
         Config(Config &&source){
     _entries    = std::move(source._entries);
@@ -36,7 +39,7 @@ void Config::
         e.key_id = eKey;
         e.key_str = name;
         _entries.push_back(e);
-        printf("value added: %d, %s\n", eKey, name);
+        //printf("value added: %d, %s\n", eKey, name);
     }
 }
 
@@ -87,7 +90,7 @@ void Config::
 }
 
 void Config::
-        writeF(const char *path){
+        writeF(char const *path){
     if( _isValidPath(path) ){
         std::ofstream ofs(path);
         if( !ofs.good() ){
@@ -95,7 +98,7 @@ void Config::
         }
         for(size_t i=0; i<_entries.size(); ++i){
             entry& ent = _entries[i];
-            ofs << ent.key_str << "=" << ent.val_str << "\n";
+            ofs << ent.key_str << _sep_keyval << ent.val_str << "\n";
         }
         ofs.close();
     }else{
@@ -110,7 +113,7 @@ void Config::
 }
 
 void Config::
-        writeF(const std::string &path) const{
+        writeF(const std::string &path){
     writeF( path.c_str() );
 }
 
@@ -292,7 +295,7 @@ bool Config::
 
 std::string Config::
         _trimComments(const std::string &str) const{
-    size_t idx_denom = str.find(sep_valcom);
+    size_t idx_denom = str.find(_sep_valcom);
     if(std::string::npos != idx_denom){
         return str.substr(0, idx_denom);
     }
@@ -324,7 +327,7 @@ void Config::
     while( std::getline(ss, line) ){
         cfg = _trimComments(line);
         if( !_isEmptyLine(cfg) ){
-            if( splitString(cfg_split, cfg, sep_keyval) ){
+            if( splitString(cfg_split, cfg, _sep_keyval) ){
                 cfg_split[0] = trimWhitespaces(cfg_split[0]);
                 cfg_split[1] = trimWhitespaces(cfg_split[1]);
                 int idx = _getKeyIndex( cfg_split[0] );

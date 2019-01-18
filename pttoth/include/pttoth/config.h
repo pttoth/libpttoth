@@ -37,7 +37,7 @@ public:
 
     void        write();                                //throws std::invalid_argument, std::logic_error
     void        writeF(char const *path);               //throws std::invalid_argument
-    void        writeF(const std::string& path) const;  //throws std::invalid_argument
+    void        writeF(const std::string& path);        //throws std::invalid_argument
 
     void        setPath(const std::string& path);
     std::string getPath() const;
@@ -61,8 +61,8 @@ private:
         std::string  val_str;       //string value associated with key
     };
 
-    static char*        _sep_keyval  = "="; //key-value spearator string
-    static char*        _sep_valcom  = ";"; //value-comment spearator string
+    static char*        _sep_keyval; //key-value spearator string
+    static char*        _sep_valcom; //value-comment spearator string
 
     std::vector<entry>  _entries;   //the stored data
     std::string         _path;      //file to read from and write to
