@@ -1,7 +1,9 @@
-TEMPLATE = app
+#TEMPLATE = app
+TEMPLATE = lib
 CONFIG += console c++11
-CONFIG -= app_bundle
-CONFIG -= qt
+CONFIG -= app_bundle qt
+CONFIG += staticlib
+
 
 Release:DESTDIR     = $$PWD/bin/release
 Release:OBJECTS_DIR = $$PWD/bin/release/.obj

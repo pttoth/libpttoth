@@ -57,7 +57,7 @@ void Config::
         std::ifstream ifs;
         ifs.open(path);
         if( !ifs.is_open() ){
-            std::string errormsg = "could not open file";
+            std::string errormsg = "could not open file: ";
             errormsg += path;
             throw std::invalid_argument( errormsg );
         }
