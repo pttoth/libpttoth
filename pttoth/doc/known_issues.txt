@@ -1,0 +1,16 @@
+- Logger is unfinished
+	- no multicore handling
+	(win only)
+		- missing folder creation
+		- missing timestamp creation for log filenames
+	
+- event doesn't handle multiple registrations of the same function
+
+
+- various camelcase problems
+- missing char handling in Config
+- event.add() should be named event.addListener()/addCallback()
+	same for remove()
+
+
+
