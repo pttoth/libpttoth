@@ -3,8 +3,7 @@ in progress:
         fix: added prototype, need testing
 
     - invalid query exceptions don't contain info about the key and value pair
-        fix: added _buildErrorStringInvalidValue(int eKey) prototype
-                currently commented out to avoid possible compilation errors
+        fix: added _buildErrorStringInvalidValue(int eKey) prototype, need testing
 
 other:
     - Logger is unfinished
