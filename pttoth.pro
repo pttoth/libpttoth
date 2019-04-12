@@ -27,7 +27,7 @@ INCLUDEPATH += ./pttoth/include \
 SOURCES += main.cpp \
     pttoth/src/config.cpp \
     pttoth/test/test_config.hpp \
-    filesystem.cpp
+    pttoth/src/filesystem.cpp
 
 #HEADERS +=
 
@@ -35,4 +35,4 @@ HEADERS += \
     pttoth/include/pttoth/config.h \
     pttoth/include/pttoth/std_extension.hpp \
     pttoth/include/pttoth/event.hpp \
-    filesystem.h
+    pttoth/include/pttoth/filesystem.h
