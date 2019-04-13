@@ -1,0 +1,24 @@
+in progress:
+    - missing char handling in Config
+        fix: added prototype, need testing
+
+    - invalid query exceptions don't contain info about the key and value pair
+        fix: added _buildErrorStringInvalidValue(int eKey) prototype, need testing
+
+other:
+    - Logger is unfinished
+        - no multicore handling
+        (win only)
+            - missing folder creation
+            - missing timestamp creation for log filenames
+
+    - event doesn't handle multiple registrations of the same function
+    - event.add() should be named event.addListener()/addCallback()
+        same for remove()
+
+    - various camelcase problems
+
+Config:
+    - error prints should use "CONFIG: " in front of every message
+        maybe even print config file path
+

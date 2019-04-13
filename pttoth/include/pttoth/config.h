@@ -42,12 +42,14 @@ public:
     void        setPath(const std::string& path);
     std::string getPath() const;
 
+    char        getC(int eKey) const;           //throws std::invalid_argument
     std::string getS(int eKey) const;           //throws std::invalid_argument
     bool        getB(int eKey) const;           //throws std::invalid_argument
     float       getF(int eKey) const;           //throws std::invalid_argument
     double      getD(int eKey) const;           //throws std::invalid_argument
     int         getI(int eKey) const;           //throws std::invalid_argument
 
+    void        setC(int eKey, char c);             //throws std::invalid_argument
     void        setS(int eKey, std::string& str);   //throws std::invalid_argument
     void        setB(int eKey, bool b);             //throws std::invalid_argument
     void        setF(int eKey, float f);            //throws std::invalid_argument
@@ -56,7 +58,7 @@ public:
 
 private:
     struct entry{
-        int key_id;        //the key's actual enum as integer
+        int key_id;                 //the key's actual enum as integer
         std::string  key_str;       //enum id as string
         std::string  val_str;       //string value associated with key
     };
@@ -67,15 +69,16 @@ private:
     std::vector<entry>  _entries;   //the stored data
     std::string         _path;      //file to read from and write to
 
-    std::string  _getData(int eKey) const;
-    std::string& _getDataReference(int eKey);
+    std::string     _getData(int eKey) const;
+    std::string&    _getDataReference(int eKey);
 
-    std::string _trimComments(const std::string& str) const;
-    bool _isValidChar(char c) const;
-    bool _isValidPath(const std::string& path) const;
-    bool _isEmptyLine(const std::string& str) const;
-    int _getKeyIndex(int eKey) const;
-    int _getKeyIndex(const std::string& str) const;
+    std::string     _trimComments(const std::string& str) const;
+    bool            _isValidChar(char c) const;
+    bool            _isValidPath(const std::string& path) const;
+    bool            _isEmptyLine(const std::string& str) const;
+    std::string     _buildErrorStringInvalidValue(int eKey) const;
+    int             _getKeyIndex(int eKey) const;
+    int             _getKeyIndex(const std::string& str) const;
 
 
     //after the config was read from any input, we have it in a string

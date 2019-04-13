@@ -128,6 +128,15 @@ std::string Config::
     return _path;
 }
 
+char Config::
+        getC(int eKey) const{
+    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    if( data.length() != 1 ){
+        throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
+    }
+    return data[0];
+}
+
 std::string Config::
         getS(int eKey) const{
     return _getData(eKey);
@@ -139,7 +148,7 @@ bool Config::
     if(       "true"  == stringToLower(data) ){ return true;
     }else if( "false" == stringToLower(data) ){ return false;
     }
-    throw std::invalid_argument("invalid config value");
+    throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
 }
 
 float Config::
@@ -152,7 +161,7 @@ float Config::
         //  std::invalid_argument
         //  std::out_of_range
         //but a simple error will suffice instead
-        throw std::invalid_argument("invalid config value");
+        throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
     }
 }
 
@@ -166,7 +175,7 @@ double Config::
         //  std::invalid_argument
         //  std::out_of_range
         //but a simple error will suffice instead
-        throw std::invalid_argument("invalid config value");
+        throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
     }
 }
 
@@ -180,7 +189,7 @@ int Config::
         //  std::invalid_argument
         //  std::out_of_range
         //but a simple error will suffice instead
-        throw std::invalid_argument("invalid config value");
+        throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
     }
 }
 
@@ -247,6 +256,17 @@ bool Config::
         if( !isspace(c) ){ return false; }
     }
     return true;
+}
+
+std::string Config::
+        _buildErrorStringInvalidValue(int eKey) const{
+    std::string     strError;
+    std::sstream    ss;
+    ss << "invalid config value for key(" << ekey << ") : (";
+    ss << _getData(eKey) << ")";
+
+    strError = ss.str;
+    return strError;
 }
 
 bool Config::
