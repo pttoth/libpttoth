@@ -261,11 +261,11 @@ bool Config::
 std::string Config::
         _buildErrorStringInvalidValue(int eKey) const{
     std::string     strError;
-    std::sstream    ss;
+/*    std::sstream    ss;
     ss << "invalid config value for key(" << ekey << ") : (";
     ss << _getData(eKey) << ")";
 
-    strError = ss.str;
+    strError = ss.str;*/
     return strError;
 }
 

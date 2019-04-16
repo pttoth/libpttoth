@@ -1,3 +1,11 @@
+/** -----------------------------------------------------------------------------
+  * FILE:    tuple.hpp
+  * AUTHOR:  pttoth
+  * EMAIL:   peter.t.toth92@gmail.com
+  * PURPOSE: Primitive tuple classes for limited amount of members
+  * -----------------------------------------------------------------------------
+  */
+
 #pragma once
 
 namespace pttoth{
