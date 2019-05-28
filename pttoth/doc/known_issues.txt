@@ -1,3 +1,11 @@
+priority!
+	SplitString's 'rest' output contains the splitting sequence!
+	fix:
+		str2 = str.substr(idx+ seq_len +1, str.length()-idx-1);
+									^
+									this here
+
+
 in progress:
     - missing char handling in Config
         fix: added prototype, need testing
