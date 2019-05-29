@@ -13,8 +13,8 @@
 
 using namespace pttoth;
 
-char* Config::_sep_keyval = "=";
-char* Config::_sep_valcom = ";";
+const char* Config::_sep_keyval = "=";
+const char* Config::_sep_valcom = ";";
 
 Config::
         Config(Config &&source){
@@ -130,9 +130,12 @@ std::string Config::
 
 char Config::
         getC(int eKey) const{
-    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    std::string data = _getData(eKey);  //getData() may throw "unknown key", we don't wanna catch that
     if( data.length() != 1 ){
-        throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
+        data = trimWhitespaces(data);   //may be longer than 1 char because of whitespaces
+        if( data.length() != 1 ){       //try again with trim
+            throw std::invalid_argument( _buildErrorStringInvalidValue(eKey) );
+        }
     }
     return data[0];
 }
@@ -144,7 +147,7 @@ std::string Config::
 
 bool Config::
         getB(int eKey) const{
-    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    std::string data = trimWhitespaces( _getData(eKey) ); //getData() may throw "unknown key", we don't wanna catch that
     if(       "true"  == stringToLower(data) ){ return true;
     }else if( "false" == stringToLower(data) ){ return false;
     }
@@ -153,7 +156,7 @@ bool Config::
 
 float Config::
         getF(int eKey) const{
-    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    std::string data = trimWhitespaces( _getData(eKey) ); //getData() may throw "unknown key", we don't wanna catch that
     try{
         return std::stof(data);
     }catch(...){
@@ -167,7 +170,7 @@ float Config::
 
 double Config::
         getD(int eKey) const{
-    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    std::string data = trimWhitespaces( _getData(eKey) ); //getData() may throw "unknown key", we don't wanna catch that
     try{
         return std::stod(data);
     }catch(...){
@@ -181,7 +184,7 @@ double Config::
 
 int Config::
         getI(int eKey) const{
-    std::string data = _getData(eKey); //getData() may throw "unknown key", we don't wanna catch that
+    std::string data = trimWhitespaces( _getData(eKey) ); //getData() may throw "unknown key", we don't wanna catch that
     try{
         return std::stoi(data);
     }catch(...){
@@ -194,7 +197,13 @@ int Config::
 }
 
 void Config::
-        setS(int eKey, std::string &str){
+        setC(int eKey, char c){
+    std::string& data = _getDataReference(eKey);
+    data = c;
+}
+
+void Config::
+        setS(int eKey, const std::string &str){
     std::string& data = _getDataReference(eKey);
     data = str;
 }
@@ -260,20 +269,21 @@ bool Config::
 
 std::string Config::
         _buildErrorStringInvalidValue(int eKey) const{
-    std::string     strError;
-    std::sstream    ss;
-    ss << "invalid config value for key(" << ekey << ") : (";
+    std::string         strError;
+    std::stringstream   ss;
+    ss << "invalid config value for key(" << eKey << ") : (";
     ss << _getData(eKey) << ")";
 
-    strError = ss.str;
+    strError = ss.str();
     return strError;
 }
 
 bool Config::
-        _isValidChar(char c) const{
-    char* valids = "_-./";
+        _isValidCharForFileName(char c) const{
+    const char* valids = "_-./";
+    size_t len = strlen(valids);
     if( isalnum(c) ){ return true; } //A-Z, a-z, 0-9
-    for(size_t i=0; i<strlen(valids); ++i){
+    for(size_t i=0; i<len; ++i){
         if( c == valids[i] ){ return true; }
     }
     return false;
@@ -306,7 +316,7 @@ bool Config::
 
     //mustn't contain illegal characters
     for(char c : path){
-        if( !_isValidChar(c) ){
+        if( !_isValidCharForFileName(c) ){
             return false;
         }
     }
@@ -349,7 +359,6 @@ void Config::
         if( !_isEmptyLine(cfg) ){
             if( splitString(cfg_split, cfg, _sep_keyval) ){
                 cfg_split[0] = trimWhitespaces(cfg_split[0]);
-                cfg_split[1] = trimWhitespaces(cfg_split[1]);
                 int idx = _getKeyIndex( cfg_split[0] );
                 if(-1 < idx){
                     _entries[idx].val_str = cfg_split[1];
