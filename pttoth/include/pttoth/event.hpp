@@ -244,7 +244,7 @@ public:
     /**
      * @brief Removes all function registrations regarding the object received as parameter
      *   Note: this will remove any parent's member functions as well,
-     *   which we may not know about
+     *   which the caller may not know about
      * @param object: listener, whose every registered funcion should be removed
      * @throws std::invalid_argument
      */

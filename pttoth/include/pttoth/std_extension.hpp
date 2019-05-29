@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cstring>
 
 namespace pttoth{
 
@@ -67,10 +68,11 @@ inline bool
 splitString(std::string* retval,
             const std::string& str,
             char const *sequence){
-    size_t idx = str.find(sequence);
+    size_t idx      = str.find(sequence);
+    size_t seq_len  = strlen(sequence);
     if(std::string::npos != idx){
         retval[0] = str.substr(0, idx);
-        retval[1] = str.substr(idx+1, str.length()-idx-1);
+        retval[1] = str.substr(idx+seq_len, str.length()-idx-1);
         return true;
     }
     return false;

@@ -30,15 +30,30 @@ bool test_config::
         fInvalidKey,
         iWriteFReadI,
         fWriteIReadF,
+        cChar,
+        cCharWithWhiteSpaces,
+        cCharTabSpaces,
+        cCharString,
     };
     cfgAddKey(cfg, fMaxDamage);
     cfgAddKey(cfg, fHealthPoints);
     cfgAddKey(cfg, bInvulnerable);
 
-    char* pathin = "conf.cfg";
-    char* pathout = "conf_out.cfg";
+    cfgAddKey(cfg, cChar);
+    cfgAddKey(cfg, cCharWithWhiteSpaces);
+    cfgAddKey(cfg, cCharTabSpaces);
+    cfgAddKey(cfg, cCharString);
 
-    cfg.readF(pathin);
+
+    char* pathin = "./conf.cfg";
+    char* pathout = "./conf_out.cfg";
+
+    try{
+        cfg.readF(pathin);
+    }catch(std::invalid_argument& e){
+        std::cout << "exception caught when trying to read file!\n  reason: " << e.what() << "\n";
+    }
+
     cfg.setF(fMaxDamage, 100.0f);
     cfgAddKey(cfg, bNewData1);
     cfgAddKey(cfg, bNewData2);
@@ -63,6 +78,49 @@ bool test_config::
     cfg.writeF(pathout);
 
     //testTrims();
+
+    std::cout << "------------------------\n";
+    std::cout << "testing char handling:\n";
+    std::cout << "------------------------\n";
+    const char  c_char                  = 'c';
+    const char *c_charwithwhitespaces   = "  a  ";
+    const char *c_chartabspaces   = " \t ";
+    const char *c_charstring            = "strval";
+
+
+    cfg.setC(cChar, c_char);
+    cfg.setS(cCharWithWhiteSpaces, c_charwithwhitespaces);
+    cfg.setS(cCharTabSpaces, c_chartabspaces);
+    cfg.setS(cCharString, c_charstring);
+
+    try{
+        std::cout << "cChar:                  string value: '" << c_char                  << "',\treturned value: '" << cfg.getC(cChar) << "'\n";
+        std::cout << "cCharWithWhiteSpaces:   string value: '" << c_charwithwhitespaces   << "',\treturned value: '" << cfg.getC(cCharWithWhiteSpaces) << "'\n";
+        try{
+            std::cout << "cCharTabSpaces:         string value: '" << c_chartabspaces   << "'\n";
+            std::cout << "  this should throw std::invalid_argument...";
+            {
+                char c = cfg.getC(cCharTabSpaces);
+                std::cout << "  FAIL\n  returned char: '" << c << "'\n\n";
+            }
+        }catch(std::invalid_argument& e){
+            std::cout << "  SUCCESS\n  exception caught: " << e.what() << "\n\n";
+        }
+        try{
+            std::cout << "cCharString:            string value: '" << c_charstring << "'\n";
+            std::cout << "  this should throw std::invalid_argument...";
+            {
+                char c = cfg.getC(cCharString);
+                std::cout << "  FAIL\n  returned char: '" << c << "'\n\n";
+            }
+        }catch(std::invalid_argument& e){
+            std::cout << "  SUCCESS\n  exception caught: " << e.what() << "\n\n";
+        }
+    }catch(std::invalid_argument& e){
+        std::cout << "\nTEST FAILED:  unexpected exception caught: " << e.what() << "\n";
+    }
+    std::cout << "------------------------\n";
+    return true;
 }
 
 void test_config::
