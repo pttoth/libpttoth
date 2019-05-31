@@ -19,3 +19,5 @@ Config:
     - error prints should use "CONFIG: " in front of every message
         maybe even print config file path
         it should use logger::debug as message output
+	- outputs wrong error message when trying to write read-only config file
+	- need to check other behaviors regarding read / write access to files
