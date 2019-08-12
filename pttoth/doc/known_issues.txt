@@ -1,15 +1,4 @@
-priority!
-	SplitString's 'rest' output contains the splitting sequence!
-	fix:
-		str2 = str.substr(idx+ seq_len , str.length()-idx-1);
-									^
-									this here
-
-
 in progress:
-    - missing char handling in Config
-        fix: added prototype, need testing
-
     - invalid query exceptions don't contain info about the key and value pair
         fix: added _buildErrorStringInvalidValue(int eKey) prototype, need testing
 
@@ -29,7 +18,4 @@ other:
 Config:
     - error prints should use "CONFIG: " in front of every message
         maybe even print config file path
-	- trimWhitespaces on value strings may mess up data
-		(e.g.: when using regexes as config values)
-	
-	- setS needs to have const std::string& parameter!
+        it should use logger::debug as message output
