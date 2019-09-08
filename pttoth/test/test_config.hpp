@@ -45,8 +45,8 @@ bool test_config::
     cfgAddKey(cfg, cCharString);
 
 
-    char* pathin = "./conf.cfg";
-    char* pathout = "./conf_out.cfg";
+    const char* pathin = "./conf.cfg";
+    const char* pathout = "./conf_out.cfg";
 
     try{
         cfg.readF(pathin);

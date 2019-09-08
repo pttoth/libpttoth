@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include <stdlib.h>
+#include <cmath>
+#include <cstdlib>
 #include <stdexcept>
 
 //#pragma warning( disable : 4201 )
