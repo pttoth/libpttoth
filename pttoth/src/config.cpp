@@ -13,8 +13,8 @@
 
 using namespace pttoth;
 
-char* Config::_sep_keyval = "=";
-char* Config::_sep_valcom = ";";
+const char* Config::_sep_keyval = "=";
+const char* Config::_sep_valcom = ";";
 
 Config::
         Config(Config &&source){
