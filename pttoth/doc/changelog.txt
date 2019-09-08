@@ -1,1 +1,18 @@
- 
+----------------------------------------------------------------------------------------------
+v1.0.1
+----------------------------------------------------------------------------------------------
+    Config
+      read() no longer trims whitespaces from values,
+        they will instead be trimmed before conversion to a type, that requires clean data
+        getC() and getS() should work properly now
+      setC(): added missing function implementation
+      setS() now takes a const value as parameter
+      fixed some errors in _buildErrorStringInvalidValue() preventing compilation
+      minor changes for small optimizations and to avoid some warnings
+    std_extension
+      splitString now correctly handles separator values longer than 1 character
+    event
+      minor change in javadoc comment
+    test_config
+      added some tests for char value handling
+

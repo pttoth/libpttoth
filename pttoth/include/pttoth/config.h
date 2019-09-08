@@ -49,12 +49,12 @@ public:
     double      getD(int eKey) const;           //throws std::invalid_argument
     int         getI(int eKey) const;           //throws std::invalid_argument
 
-    void        setC(int eKey, char c);             //throws std::invalid_argument
-    void        setS(int eKey, std::string& str);   //throws std::invalid_argument
-    void        setB(int eKey, bool b);             //throws std::invalid_argument
-    void        setF(int eKey, float f);            //throws std::invalid_argument
-    void        setD(int eKey, double d);           //throws std::invalid_argument
-    void        setI(int eKey, int i);              //throws std::invalid_argument
+    void        setC(int eKey, char c);                     //throws std::invalid_argument
+    void        setS(int eKey, const std::string& str);     //throws std::invalid_argument
+    void        setB(int eKey, bool b);                     //throws std::invalid_argument
+    void        setF(int eKey, float f);                    //throws std::invalid_argument
+    void        setD(int eKey, double d);                   //throws std::invalid_argument
+    void        setI(int eKey, int i);                      //throws std::invalid_argument
 
 private:
     struct entry{
@@ -73,7 +73,7 @@ private:
     std::string&    _getDataReference(int eKey);
 
     std::string     _trimComments(const std::string& str) const;
-    bool            _isValidChar(char c) const;
+    bool            _isValidCharForFileName(char c) const;
     bool            _isValidPath(const std::string& path) const;
     bool            _isEmptyLine(const std::string& str) const;
     std::string     _buildErrorStringInvalidValue(int eKey) const;
