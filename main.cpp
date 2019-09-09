@@ -3,7 +3,7 @@
 #include "test/test_config.hpp"
 
 using namespace std;
-using namespace pttoth;
+using namespace PT;
 
 /*
 int main(){

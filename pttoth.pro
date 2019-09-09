@@ -30,26 +30,26 @@ SOURCES += main.cpp \
     pttoth/test/test_config.hpp
 
 HEADERS += \
-    pttoth/include/pttoth/config.h \
-    pttoth/include/pttoth/math.h \
-    pttoth/include/pttoth/math/bool1.h \
-    pttoth/include/pttoth/math/bool2.h \
-    pttoth/include/pttoth/math/bool3.h \
-    pttoth/include/pttoth/math/bool4.h \
-    pttoth/include/pttoth/math/boolswizzle.h \
-    pttoth/include/pttoth/math/float1.h \
-    pttoth/include/pttoth/math/float2.h \
-    pttoth/include/pttoth/math/float2swizzle.h \
-    pttoth/include/pttoth/math/float3.h \
-    pttoth/include/pttoth/math/float3swizzle.h \
-    pttoth/include/pttoth/math/float4.h \
-    pttoth/include/pttoth/math/float4swizzle.h \
-    pttoth/include/pttoth/math/float4x4.h \
-    pttoth/include/pttoth/math/floatswizzle.h \
-    pttoth/include/pttoth/math/int1.h \
-    pttoth/include/pttoth/math/int2.h \
-    pttoth/include/pttoth/math/int3.h \
-    pttoth/include/pttoth/math/int4.h \
-    pttoth/include/pttoth/math/intswizzle.h \
-    pttoth/include/pttoth/std_extension.hpp \
-    pttoth/include/pttoth/event.hpp
+    pttoth/include/pt/config.h \
+    pttoth/include/pt/math.h \
+    pttoth/include/pt/math/bool1.h \
+    pttoth/include/pt/math/bool2.h \
+    pttoth/include/pt/math/bool3.h \
+    pttoth/include/pt/math/bool4.h \
+    pttoth/include/pt/math/boolswizzle.h \
+    pttoth/include/pt/math/float1.h \
+    pttoth/include/pt/math/float2.h \
+    pttoth/include/pt/math/float2swizzle.h \
+    pttoth/include/pt/math/float3.h \
+    pttoth/include/pt/math/float3swizzle.h \
+    pttoth/include/pt/math/float4.h \
+    pttoth/include/pt/math/float4swizzle.h \
+    pttoth/include/pt/math/float4x4.h \
+    pttoth/include/pt/math/floatswizzle.h \
+    pttoth/include/pt/math/int1.h \
+    pttoth/include/pt/math/int2.h \
+    pttoth/include/pt/math/int3.h \
+    pttoth/include/pt/math/int4.h \
+    pttoth/include/pt/math/intswizzle.h \
+    pttoth/include/pt/std_extension.hpp \
+    pttoth/include/pt/event.hpp

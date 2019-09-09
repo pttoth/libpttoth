@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <cstring>
 
-namespace pttoth{
+namespace PT{
 
 template<typename T>
 inline int indexOfInVector(std::vector<T>& vec, T& element){

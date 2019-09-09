@@ -1,11 +1,11 @@
 #pragma once
 
-#include "pttoth/config.h"
-#include "pttoth/std_extension.hpp"
+#include "pt/config.h"
+#include "pt/std_extension.hpp"
 
 #include <iostream>
 
-namespace pttoth{
+namespace PT{
 
 class test_config{
 

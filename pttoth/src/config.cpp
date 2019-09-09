@@ -1,4 +1,4 @@
-#include "pttoth/config.h"
+#include "pt/config.h"
 
 #include <stdexcept>
 
@@ -9,9 +9,9 @@
 
 #include <float.h>
 
-#include "pttoth/std_extension.hpp"
+#include "pt/std_extension.hpp"
 
-using namespace pttoth;
+using namespace PT;
 
 const char* Config::_sep_keyval = "=";
 const char* Config::_sep_valcom = ";";

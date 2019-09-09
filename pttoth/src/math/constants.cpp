@@ -7,7 +7,7 @@
  */
  
 //#include "DXUT.h"
-#include "pttoth/math.h"
+#include "pt/math.h"
 
 using namespace PT::math;
 

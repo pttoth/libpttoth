@@ -16,7 +16,7 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace pttoth{
+namespace PT{
 
 #define ALLOW_MULTIPLE_INSTANCES 0x1
 
