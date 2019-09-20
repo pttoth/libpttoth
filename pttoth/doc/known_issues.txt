@@ -2,6 +2,16 @@ in progress:
     - invalid query exceptions don't contain info about the key and value pair
         fix: added _buildErrorStringInvalidValue(int eKey) prototype, need testing
 
+	std_extension
+		stringToLower + Upper
+			remove unnecessary copy ctor
+		SplitString
+			fix 'char const *' param to 'const char *'
+			check whether it fails if there is no occurence of separator sequence
+		trimWhitespaces
+			in the if-else code, fix the indentation to a more readable one
+		
+
 other:
     - Logger is unfinished
         - no multicore handling
