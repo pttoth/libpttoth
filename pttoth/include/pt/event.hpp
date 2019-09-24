@@ -21,7 +21,7 @@ namespace PT{
 #define ALLOW_MULTIPLE_INSTANCES 0x1
 
 template<typename... Signature>
-class event{
+class EventBase{
     struct data{
         void*                             target;           //used for identification
         void*                             function_ptr;     //used for identification
@@ -69,16 +69,16 @@ class event{
         }
     };
 
-    unsigned     _flags;    //CHECK: may not be needed
-    size_t       _size;
-    size_t       _cap;
-    size_t       _index; //CHECK: queue may be fragmented, so that index != size  (fix occurences!!!!)
-    event::data* _functions;
+    unsigned            _flags;     //CHECK: may not be needed
+    size_t              _size;
+    size_t              _cap;
+    size_t              _index;     //CHECK: queue may be fragmented, so that index != size  (fix occurences!!!!)
+    EventBase::data*    _functions;
 
     /** @brief: returns the index of the element passed,
      *            or -1 if not contained
      */
-    inline int index_of(const event::data& d) const{
+    inline int index_of(const EventBase::data& d) const{
         for(int i=0; i<_index; ++i){
             if(_functions[i] == d){
                 return i;
@@ -87,7 +87,7 @@ class event{
         return -1;
     }
 
-    inline void defragment_from( event::data* from, int const from_cap){
+    inline void defragment_from( EventBase::data* from, int const from_cap){
         int i = 0;
         int j = 0;
         while( (i<from_cap) && (j<_cap) ){
@@ -101,7 +101,7 @@ class event{
     }
 
     //common mechanics of adding elements
-    inline void add_element(event::data d){
+    inline void add_element(EventBase::data d){
         if(nullptr == _functions){
             reserve(1);
         }
@@ -122,7 +122,7 @@ class event{
     }
 
     //common mechanics of removing elements
-    inline void remove_element(event::data d){
+    inline void remove_element(EventBase::data d){
         int index = index_of(d);
         if( -1 != index ){
             _functions[index].invalidate();
@@ -132,20 +132,21 @@ class event{
     }
 
 public:
-    event(): _flags(0), _size(0), _cap(0), _index(0),
-             _functions(nullptr){
+    EventBase(): _flags(0), _size(0),
+                 _cap(0), _index(0),
+                 _functions(nullptr){
     }
 
-    event(const event& other):  _flags(other._flags),
-                                _size(other._size),
-                                _cap(other._cap),
-                                _index(other._index){
-        _functions = new event::data[_cap];
+    EventBase(const EventBase& other): _flags(other._flags),
+                                        _size(other._size),
+                                        _cap(other._cap),
+                                        _index(other._index){
+        _functions = new EventBase::data[_cap];
         for(int i=0; i<_cap; ++i){
             _functions[i] = other._functions[i];
         }
     }
-    event(event&& source): _flags(source._flags),
+    EventBase(EventBase&& source): _flags(source._flags),
                             _size(source._size),
                             _cap(source._cap),
                             _index(source._index){
@@ -154,22 +155,22 @@ public:
         source._functions = nullptr;
     }
 
-    virtual ~event(){
+    virtual ~EventBase(){
         delete[] _functions;
     }
 
-    event& operator=(const event& other){
+    EventBase& operator=(const EventBase& other){
         delete[] _functions;
         _flags = other._flags;
         _size = other._size;
         _cap = other._cap;
         _index = other._index;
-        _functions = new event::data[_cap];
+        _functions = new EventBase::data[_cap];
         for(int i=0; i<_cap; ++i){
             _functions[i] = other._functions[i];
         }
     }
-    event& operator=(event&& source){
+    EventBase& operator=(EventBase&& source){
         delete[] _functions;
         _flags = source._flags;
         _size = source._size;
@@ -178,7 +179,7 @@ public:
         _functions = source._functions;
         source._functions = nullptr;
     }
-    bool operator==(const event& other)const = delete;
+    bool operator==(const EventBase& other)const = delete;
 
     /**
      * @brief Registers the class member function received in the parameters.
@@ -198,7 +199,7 @@ public:
             (instance->*func)(args...);
         };
 
-        add_element( event::data((void*)instance, (void*)func, lambda) ); //FUNC_PARAMS
+        add_element( EventBase::data((void*)instance, (void*)func, lambda) ); //FUNC_PARAMS
     }
 
     /**
@@ -210,7 +211,7 @@ public:
         if( nullptr == func ){
             throw std::invalid_argument("attempted to register nullptr as function");
         }
-        add_element( event::data((void*)nullptr, (void*)func, func) );
+        add_element( EventBase::data((void*)nullptr, (void*)func, func) );
     }
 
     /**
@@ -226,7 +227,7 @@ public:
         }else if( nullptr == func ){
             throw std::invalid_argument("attempted to unregister nullptr as function");
         }
-        remove_element( event::data((void*)instance, (void*)func, nullptr) );
+        remove_element( EventBase::data((void*)instance, (void*)func, nullptr) );
     }
 
     /**
@@ -238,7 +239,7 @@ public:
         if( nullptr == func ){
             throw std::invalid_argument("attempted to unregister nullptr as function");
         }
-        remove_element( event::data(nullptr, (void*)func, nullptr) );
+        remove_element( EventBase::data(nullptr, (void*)func, nullptr) );
     }
 
     /**
@@ -253,7 +254,7 @@ public:
             throw std::invalid_argument("attempted to unregister nullptr as listener");
         }
 
-        event::data d( (void*)object, nullptr, nullptr);
+        EventBase::data d( (void*)object, nullptr, nullptr);
 
         //loop until cannot find any more entries with 'target'
         int index = 0;
@@ -272,8 +273,8 @@ public:
      */
     inline void reserve(const size_t new_size){
         if(_cap < new_size){
-            event::data* old = _functions;
-            _functions = new event::data[new_size];
+            EventBase::data* old = _functions;
+            _functions = new EventBase::data[new_size];
             if(old){
                 defragment_from(old, _index);
             }
@@ -308,8 +309,8 @@ public:
             _functions = nullptr;
         }else{
             if(_size < _index){
-                event::data* old = _functions;
-                _functions= new event::data[_size];
+                EventBase::data* old = _functions;
+                _functions= new EventBase::data[_size];
                 defragment_from(old, _index);
                 _cap = _size;
                 delete[] old;
@@ -331,6 +332,64 @@ public:
         }
     }
 
-}; //end of class
+}; //end of 'EventBase'
+
+
+
+/** @class Event:
+ *  @brief Wrapper class that hides the 'operator()' of the actual event object
+ *          Its purpose is to prevent external code to trigger the event with the exposed operator().
+ */
+template<typename... Signature>
+class Event{
+    EventBase<Signature...>& ev_base;
+public:
+    Event(EventBase<Signature...>& eventbase):
+        ev_base(eventbase){
+    }
+    Event(const Event& other)                   = delete;       //TODO: find a way to be able to copy correctly
+    Event(Event&& source)                       = default;
+    virtual ~Event(){}
+    Event& operator=(const Event& other)        = delete;
+    Event& operator=(Event&& source)            = default;
+
+    bool operator==(const Event& other) const   = delete;
+
+    template<typename T>
+    inline void add(T* instance, void (T::*func)(Signature...) ){
+        ev_base.add(instance, func);
+    }
+
+    inline void add( void (*func)(Signature...) ){
+        ev_base.add(func);
+    }
+
+    template<typename T>
+    inline void remove(T* instance, void (T::*func)(Signature...) ){
+        ev_base.remove(instance, func);
+    }
+
+    inline void remove(void (*func)(Signature...) ){
+        ev_base.remove(func);
+    }
+
+    inline void remove_object(void* const object){
+        ev_base.remove_object(object);
+    }
+
+    inline void reserve(const size_t new_size){
+        ev_base.reserve(new_size);
+    }
+
+    inline void optimize(){
+        ev_base.optimize();
+    }
+
+    inline void shrink_to_fit(){
+        ev_base.shrink_to_fit();
+    }
+}; //end of 'Event'
+
+
 
 } //end of namespace
