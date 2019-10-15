@@ -1,3 +1,13 @@
+/** -----------------------------------------------------------------------------
+  * FILE:    parentchildnode.hpp
+  * AUTHOR:  pttoth
+  * EMAIL:   peter.t.toth92@gmail.com
+  * PURPOSE: Implements methods required to form a hierarchy of nodes.
+  *          Classes that inherit it should set its template parameter
+  *          to their predeclared class name.
+  * -----------------------------------------------------------------------------
+  */
+
 #pragma once
 
 #include <vector>
@@ -5,7 +15,7 @@
 #include <stdexcept>
 #include <assert.h>
 
-namespace pt{
+namespace PT{
 
 template<class T>
 class ParentChildNode{
@@ -82,7 +92,7 @@ protected:
         }
     }
 private:
-    virtual int getChildIndex(T* child){
+    virtual int getChildIndex(ParentChildNode* child){
         for(size_t i=0; i<mChildren.size(); ++i){
             if(mChildren[i] == child){
                 return static_cast<int>(i);

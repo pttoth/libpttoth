@@ -1,5 +1,5 @@
-#TEMPLATE = app
-TEMPLATE = lib
+TEMPLATE = app
+#TEMPLATE = lib
 CONFIG += console c++11
 CONFIG -= app_bundle qt
 CONFIG += staticlib
@@ -27,7 +27,8 @@ INCLUDEPATH += ./pttoth/include \
 SOURCES += main.cpp \
     pttoth/src/config.cpp \
     pttoth/src/math/constants.cpp \
-    pttoth/test/test_config.hpp
+    pttoth/test/test_config.hpp \
+    pttoth/test/test_parentchildnode.hpp
 
 HEADERS += \
     pttoth/include/pt/config.h \
@@ -54,3 +55,4 @@ HEADERS += \
     pttoth/include/pt/parentchildnode.hpp \
     pttoth/include/pt/std_extension.hpp \
     pttoth/include/pt/event.hpp
+
