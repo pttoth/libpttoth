@@ -51,5 +51,6 @@ HEADERS += \
     pttoth/include/pt/math/int3.h \
     pttoth/include/pt/math/int4.h \
     pttoth/include/pt/math/intswizzle.h \
+    pttoth/include/pt/parentchildnode.hpp \
     pttoth/include/pt/std_extension.hpp \
     pttoth/include/pt/event.hpp
