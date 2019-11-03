@@ -244,7 +244,8 @@ public:
 
 	static float4x4 reflection(const float4& plane)
 	{
-		float4 normalPlane = plane / plane.xyz.length();
+        float3 p_xyz = float3(plane.x, plane.y, plane.z);
+        float4 normalPlane = plane / p_xyz.length();
 
 		return float4x4(
 			-2 * normalPlane.x * normalPlane.x + 1 , -2 * normalPlane.y * normalPlane.x     , -2 * normalPlane.z * normalPlane.x       , 0 ,

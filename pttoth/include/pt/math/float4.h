@@ -711,7 +711,7 @@ public:
 
 	float4 quatExp()
 	{
-		float3 vv = xyz;
+        float3 vv = float3(x, y, z);
 		float theta = vv.length();
 		return float4(vv * (sinf(theta) / theta), cosf(theta)) * ::exp(w);
 	}
@@ -719,7 +719,7 @@ public:
 	float4 quatLn()
 	{
 		float lq = length();
-		float3 vv = xyz;
+        float3 vv = float3(x, y, z);
 		float3 lv = vv.length();
 		return float4(vv / (lv * ::cosf(w / lq) ), ::logf(lq));
 	}
