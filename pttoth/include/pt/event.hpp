@@ -1,6 +1,6 @@
 /** -----------------------------------------------------------------------------
   * FILE:   event.hpp
-  * AUTHOR: pttoth - 2018.06.11.
+  * AUTHOR: pttoth
   * EMAIL:  peter.t.toth92@gmail.com
   * PURPOSE:
   *     calls registered functions sequentially with operator()
@@ -11,9 +11,6 @@
 
 #include <vector>
 #include <functional>
-
-//temp
-#include <iostream>
 #include <stdexcept>
 
 namespace PT{
@@ -199,7 +196,7 @@ public:
             (instance->*func)(args...);
         };
 
-        add_element( EventBase::data((void*)instance, (void*)func, lambda) ); //FUNC_PARAMS
+        add_element( EventBase::data(static_cast<void*>(instance), static_cast<void*>(func), lambda) ); //FUNC_PARAMS
     }
 
     /**
@@ -211,7 +208,7 @@ public:
         if( nullptr == func ){
             throw std::invalid_argument("attempted to register nullptr as function");
         }
-        add_element( EventBase::data((void*)nullptr, (void*)func, func) );
+        add_element( EventBase::data(nullptr, static_cast<void*>(func), func) );
     }
 
     /**
@@ -227,7 +224,7 @@ public:
         }else if( nullptr == func ){
             throw std::invalid_argument("attempted to unregister nullptr as function");
         }
-        remove_element( EventBase::data((void*)instance, (void*)func, nullptr) );
+        remove_element( EventBase::data(static_cast<void*>(instance), static_cast<void*>(func), nullptr) );
     }
 
     /**
@@ -239,7 +236,7 @@ public:
         if( nullptr == func ){
             throw std::invalid_argument("attempted to unregister nullptr as function");
         }
-        remove_element( EventBase::data(nullptr, (void*)func, nullptr) );
+        remove_element( EventBase::data(nullptr, static_cast<void*>(func), nullptr) );
     }
 
     /**
@@ -254,7 +251,7 @@ public:
             throw std::invalid_argument("attempted to unregister nullptr as listener");
         }
 
-        EventBase::data d( (void*)object, nullptr, nullptr);
+        EventBase::data d( static_cast<void*>(object), nullptr, nullptr);
 
         //loop until cannot find any more entries with 'target'
         int index = 0;
@@ -347,11 +344,11 @@ public:
     Event(EventBase<Signature...>& eventbase):
         ev_base(eventbase){
     }
-    Event(const Event& other)                   = delete;       //TODO: find a way to be able to copy correctly
-    Event(Event&& source)                       = default;
+    Event(const Event& other)                   = delete;       //Note: is there a way to be able to copy correctly?
+    Event(Event&& source)                       = delete;
     virtual ~Event(){}
     Event& operator=(const Event& other)        = delete;
-    Event& operator=(Event&& source)            = default;
+    Event& operator=(Event&& source)            = delete;
 
     bool operator==(const Event& other) const   = delete;
 
@@ -392,4 +389,4 @@ public:
 
 
 
-} //end of namespace
+} //end of namespace PT
