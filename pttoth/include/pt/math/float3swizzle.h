@@ -21,7 +21,7 @@
 		return t. FLOAT3SWIZZLE_METHOD_NAME (o);	\
 	}
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -35,6 +35,6 @@ class float3swizzle : public floatswizzle<nBase, T, int3, bool3, s0, s1, s2, s3>
 	
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

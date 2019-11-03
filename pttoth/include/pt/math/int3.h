@@ -9,7 +9,7 @@
 
 #include "intswizzle.h"
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -35,7 +35,7 @@ public:
 		};
 
 		int v[3];
-
+#ifdef MATH_ENABLE_SWIZZLE
 		intswizzle<3, int2, bool2, 0, 0> xx;
 		intswizzle<3, int2, bool2, 0, 1> xy;
 		intswizzle<3, int2, bool2, 0, 2> xz;
@@ -157,7 +157,7 @@ public:
 		intswizzle<3, int4, bool4, 2, 2, 2, 0> zzzx;
 		intswizzle<3, int4, bool4, 2, 2, 2, 1> zzzy;
 		intswizzle<3, int4, bool4, 2, 2, 2, 2> zzzz;
-
+#endif
 	};
 
 	int3():x(0),y(0),z(0){}
@@ -415,6 +415,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

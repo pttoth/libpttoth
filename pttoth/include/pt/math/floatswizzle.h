@@ -54,7 +54,7 @@
 		return t. FLOATSWIZZLE_METHOD_NAME ( a, b );	\
 	}
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -185,6 +185,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

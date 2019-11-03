@@ -7,7 +7,7 @@
  */
 #pragma once
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -22,6 +22,6 @@ class float4swizzle : public floatswizzle<nBase, T, int4, bool4, s0, s1, s2, s3>
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

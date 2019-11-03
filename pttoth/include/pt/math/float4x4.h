@@ -8,7 +8,7 @@
 #pragma once
 
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -437,6 +437,6 @@ inline const float4& operator*=(float4& v, const float4x4& m)
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

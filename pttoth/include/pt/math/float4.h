@@ -30,7 +30,7 @@
 		return FLOAT4_METHOD_RETURN_TYPE ( :: FLOAT4_METHOD_NAME (x, a.x, b.x), :: FLOAT4_METHOD_NAME (y, a.y, b.y), :: FLOAT4_METHOD_NAME (z, a.z, b.z), :: FLOAT4_METHOD_NAME (w, a.w, b.w));	\
 	}
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -62,7 +62,7 @@ public:
 		};
 		
 		float v[4];
-
+#ifdef MATH_ENABLE_SWIZZLE
 		float2swizzle<4, float2, 0, 0> xx;
 		float2swizzle<4, float2, 0, 1> xy;
 		float2swizzle<4, float2, 0, 2> xz;
@@ -407,7 +407,7 @@ public:
 		float4swizzle<4, float4, 3, 3, 3, 1> wwwy;
 		float4swizzle<4, float4, 3, 3, 3, 2> wwwz;
 		float4swizzle<4, float4, 3, 3, 3, 3> wwww;
-
+#endif
 
 	};
 
@@ -752,6 +752,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

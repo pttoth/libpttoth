@@ -9,7 +9,7 @@
 
 #include "boolswizzle.h"
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -29,9 +29,11 @@ public:
 
 		bool v[1];
 
+#ifdef MATH_ENABLE_SWIZZLE
 		boolswizzle<1, bool2, 0, 0> xx;
 		boolswizzle<1, bool3, 0, 0, 0> xxx;
 		boolswizzle<1, bool4, 0, 0, 0, 0> xxxx;
+#endif
 	};
 
 	operator bool() const
@@ -138,6 +140,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

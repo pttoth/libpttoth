@@ -31,7 +31,7 @@
 		return FLOAT1_METHOD_RETURN_TYPE ( :: FLOAT1_METHOD_NAME (x, a.x, b.x) );	\
 	}
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -61,11 +61,11 @@ public:
 		};
 
 		float v[1];
-
+#ifdef MATH_ENABLE_SWIZZLE
 		float2swizzle<1, float2, 0, 0> xx;
 		float3swizzle<1, float3, 0, 0, 0> xxx;
 		float4swizzle<1, float4, 0, 0, 0, 0> xxxx;
-
+#endif
 	};
 
 	operator float() const
@@ -339,6 +339,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

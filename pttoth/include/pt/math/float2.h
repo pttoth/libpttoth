@@ -31,7 +31,7 @@
 		return FLOAT2_METHOD_RETURN_TYPE ( :: FLOAT2_METHOD_NAME (x, a.x, b.x), :: FLOAT2_METHOD_NAME (y, a.y, b.y));	\
 	}
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -62,7 +62,7 @@ public:
 		};
 
 		float v[2];
-
+#ifdef MATH_ENABLE_SWIZZLE
 		float2swizzle<2, float2, 0, 0> xx;
 		float2swizzle<2, float2, 0, 1> xy;
 		float2swizzle<2, float2, 1, 0> yx;
@@ -93,7 +93,7 @@ public:
 		float4swizzle<2, float4, 1, 1, 0, 1> yyxy;
 		float4swizzle<2, float4, 1, 1, 1, 0> yyyx;
 		float4swizzle<2, float4, 1, 1, 1, 1> yyyy;
-
+#endif
 	};
 
 	float2():x(0.0f),y(0.0f){}
@@ -397,6 +397,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

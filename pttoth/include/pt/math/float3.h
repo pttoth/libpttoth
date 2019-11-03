@@ -31,7 +31,7 @@
 		return FLOAT3_METHOD_RETURN_TYPE ( :: FLOAT3_METHOD_NAME (x, a.x, b.x), :: FLOAT3_METHOD_NAME (y, a.y, b.y), :: FLOAT3_METHOD_NAME (z, a.z, b.z));	\
 	}
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 namespace PT {
 #endif
 namespace math {
@@ -64,7 +64,7 @@ public:
 		};
 
 		float v[3];
-
+#ifdef MATH_ENABLE_SWIZZLE
 		float2swizzle<3, float2, 0, 0> xx;
 		float2swizzle<3, float2, 0, 1> xy;
 		float2swizzle<3, float2, 0, 2> xz;
@@ -189,6 +189,7 @@ public:
 
 		float4swizzle<3, float4, 0, 1, 2, -1> xyz0;
 		float4swizzle<3, float4, 0, 1, 2, -2> xyz1;
+#endif
 	};
 
 	float3():x(0.0f),y(0.0f),z(0.0f){}
@@ -519,6 +520,6 @@ public:
 
 } //math
 
-#ifndef REMOVE_PT_NAMESPACE
+#ifndef MATH_REMOVE_PT_NAMESPACE
 } //PT
 #endif

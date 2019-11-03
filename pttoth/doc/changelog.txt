@@ -1,4 +1,15 @@
 ----------------------------------------------------------------------------------------------
+v1.1.1
+----------------------------------------------------------------------------------------------
+	Event
+	  renamed 'event' to 'EventBase'
+      added 'Event' wrapper class
+	    it hides the 'operator()' of EventBase ensuring safe public access
+	  removed Move Constructor and Assignment Operator
+	math
+      added 'MATH_ENABLE_SWIZZLE' macro
+      renamed 'REMOVE_PT_NAMESPACE' macro to 'MATH_REMOVE_PT_NAMESPACE'
+----------------------------------------------------------------------------------------------
 v1.1.0
 ----------------------------------------------------------------------------------------------
 	added 'GNU GPL v3.0' license to the project
