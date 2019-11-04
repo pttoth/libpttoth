@@ -2,6 +2,10 @@ in progress:
     - invalid query exceptions don't contain info about the key and value pair
         fix: added _buildErrorStringInvalidValue(int eKey) prototype, need testing
 
+	std_extension
+		SplitString
+			check whether it fails if there is no occurence of separator sequence
+
 other:
     - Logger is unfinished
         - no multicore handling

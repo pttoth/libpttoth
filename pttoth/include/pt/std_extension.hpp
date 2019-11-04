@@ -2,8 +2,8 @@
   * FILE:    std_extension.hpp
   * AUTHOR:  pttoth
   * EMAIL:   peter.t.toth92@gmail.com
-  * PURPOSE: Contains some utility functions
-  *             for which the standard STL methods are more or less messy
+  * PURPOSE: Contains some utility functions for which
+  *          the standard STL methods are more or less messy
   * -----------------------------------------------------------------------------
   */
 
@@ -18,7 +18,8 @@
 namespace PT{
 
 template<typename T>
-inline int indexOfInVector(std::vector<T>& vec, T& element){
+inline int
+indexOfInVector(std::vector<T>& vec, T& element){
     for(int i=0; i<vec.size(); ++i){
         if(vec[i] == element){
             return i;
@@ -28,12 +29,14 @@ inline int indexOfInVector(std::vector<T>& vec, T& element){
 }
 
 template<typename T>
-inline bool containedInVector(std::vector<T>& vec, T& element){
+inline bool
+containedInVector(std::vector<T>& vec, T& element){
     return ( -1 < indexOfInVector(vec, element) );
 }
 
 template<typename T>
-inline void removeElementInVector(std::vector<T>& vec, size_t pos){
+inline void
+removeElementInVector(std::vector<T>& vec, size_t pos){
     auto iter = vec.begin()+pos;
     vec.erase(iter);
 }
@@ -45,16 +48,18 @@ trimWhitespaces(const std::string& str){
         size_t high = str.length()-1;
         bool done = false;
         while(!done){
-            if( low < str.length()
-              && isspace(str[low]) ){   ++low;
-            }else{                      done = true;
+            if( (low < str.length()) && isspace(str[low]) ){
+                ++low;
+            }else{
+                done = true;
             }
         }
         done = false;
         while(!done){
-            if( low <= high
-              && isspace(str[high]) ){  --high;
-            }else{                      done = true;
+            if( (low <= high) && isspace(str[high]) ){
+                --high;
+            }else{
+                done = true;
             }
         }
         if(low <= high){
@@ -67,7 +72,7 @@ trimWhitespaces(const std::string& str){
 inline bool
 splitString(std::string* retval,
             const std::string& str,
-            char const *sequence){
+            const char *sequence){
     size_t idx      = str.find(sequence);
     size_t seq_len  = strlen(sequence);
     if(std::string::npos != idx){
@@ -87,16 +92,18 @@ splitString(std::string* retval,
 
 inline std::string
 stringToLower(const std::string& str){
-    std::string data(str);
-    std::transform(data.begin(), data.end(), data.begin(), ::tolower);
-    return std::move(data);
+    std::string result;
+    result.reserve(str.length());
+    std::transform(str.begin(), str.end(), result.begin(), ::tolower);
+    return std::move(result);
 }
 
 inline std::string
 stringToUpper(const std::string& str){
-    std::string data(str);
-    std::transform(data.begin(), data.end(), data.begin(), ::toupper);
-    return std::move(data);
+    std::string result;
+    result.reserve(str.length());
+    std::transform(str.begin(), str.end(), result.begin(), ::toupper);
+    return std::move(result);
 }
 
 
