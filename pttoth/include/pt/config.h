@@ -23,10 +23,11 @@ public:
     Config()                    = default;
     Config(const Config& other) = default;
     Config(Config&& source);
-    virtual ~Config(){}
-    Config& operator=(const Config &other)  = default;
-    Config& operator=(Config &&source);
-    bool operator==(const Config &other) const  = delete;
+    virtual ~Config();
+
+    Config&     operator=(const Config &other)  = default;
+    Config&     operator=(Config &&source);
+    bool        operator==(const Config &other) const  = delete;
 
     void        addKey(int eKey, char const *name); //throws std::invalid_argument
 
