@@ -17,25 +17,29 @@ const char* Config::_sep_keyval = "=";
 const char* Config::_sep_valcom = ";";
 
 Config::
-Config(Config &&source){
+Config(Config &&source)
+{
     _entries    = std::move(source._entries);
     _path       = std::move(source._path);
 }
 
 Config::
-~Config(){
+~Config()
+{
 
 }
 
 Config &Config::
-operator=(Config &&source){
+operator=(Config &&source)
+{
     _entries    = std::move(source._entries);
     _path       = std::move(source._path);
     return *this;
 }
 
 void Config::
-addKey(int eKey, const char *name){
+addKey(int eKey, const char *name)
+{
     int idx = _getKeyIndex(eKey);
     if(-1 < idx){
         throw std::invalid_argument("key already contained");
@@ -49,7 +53,8 @@ addKey(int eKey, const char *name){
 }
 
 void Config::
-read(){
+read()
+{
     if( 0 == _path.length() ){
         throw std::logic_error("no path defined");
     }
@@ -57,7 +62,8 @@ read(){
 }
 
 void Config::
-readF(const char *path){
+readF(const char *path)
+{
     if( _isValidPath(path) ){
         std::ifstream ifs;
         ifs.open(path);
@@ -76,18 +82,21 @@ readF(const char *path){
 }
 
 void Config::
-readF(const std::string &path){
+readF(const std::string &path)
+{
     readF( path.c_str() );
 }
 
 void Config::
-readS(const std::string &str){
+readS(const std::string &str)
+{
     std::stringstream ss(str);
     _parseData(ss);
 }
 
 void Config::
-write(){
+write()
+{
     if( 0 == _path.length() ){
         throw std::logic_error("no path defined");
     }
@@ -95,16 +104,15 @@ write(){
 }
 
 void Config::
-writeF(char const *path){
+writeF(char const *path)
+{
     if( _isValidPath(path) ){
         std::ofstream ofs(path);
         if( !ofs.good() ){
             std::cerr << "error opening file " << path << " for reading\n";
+            return;
         }
-        for(size_t i=0; i<_entries.size(); ++i){
-            entry& ent = _entries[i];
-            ofs << ent.key_str << _sep_keyval << ent.val_str << "\n";
-        }
+        _writeData(ofs);
         ofs.close();
     }else{
         /*
@@ -118,19 +126,54 @@ writeF(char const *path){
 }
 
 void Config::
-writeF(const std::string &path){
+writeF(const std::string &path)
+{
     writeF( path.c_str() );
+}
+
+std::string Config::
+writeS()
+{
+    std::string         retval;
+    std::ostringstream  oss(retval);
+    _writeData(oss);
+    return retval;
+}
+
+void Config::
+setPath(const char *path)
+{
+    _path = path;
 }
 
 
 void Config::
-setPath(const std::string &path){
+setPath(const std::string &path)
+{
     _path = path;
 }
 
 std::string Config::
         getPath() const{
     return _path;
+}
+
+void Config::
+setName(const char *name)
+{
+    _name = name;
+}
+
+void Config::
+setName(const std::string &name)
+{
+    _name = name;
+}
+
+std::string Config::
+getName() const
+{
+    return _name;
 }
 
 char Config::
@@ -202,19 +245,22 @@ getI(int eKey) const{
 }
 
 void Config::
-setC(int eKey, char c){
+setC(int eKey, char c)
+{
     std::string& data = _getDataReference(eKey);
     data = c;
 }
 
 void Config::
-setS(int eKey, const std::string &str){
+setS(int eKey, const std::string &str)
+{
     std::string& data = _getDataReference(eKey);
     data = str;
 }
 
 void Config::
-setB(int eKey, bool b){
+setB(int eKey, bool b)
+{
     std::string& data = _getDataReference(eKey);
     if(b){ data = "true";
     }else{ data = "false";
@@ -222,7 +268,8 @@ setB(int eKey, bool b){
 }
 
 void Config::
-setF(int eKey, float f){
+setF(int eKey, float f)
+{
     std::string& data = _getDataReference(eKey);
     char buf[64];
     sprintf(buf, "%f", f);
@@ -230,7 +277,8 @@ setF(int eKey, float f){
 }
 
 void Config::
-setD(int eKey, double d){
+setD(int eKey, double d)
+{
     std::string& data = _getDataReference(eKey);
     char buf[64];
     sprintf(buf, "%lf", d);
@@ -238,7 +286,8 @@ setD(int eKey, double d){
 }
 
 void Config::
-setI(int eKey, int i){
+setI(int eKey, int i)
+{
     std::string& data = _getDataReference(eKey);
     char buf[64];
     sprintf(buf, "%d", i);
@@ -255,7 +304,8 @@ _getData(int eKey) const{
 }
 
 std::string &Config::
-_getDataReference(int eKey){
+_getDataReference(int eKey)
+{
     int idx = _getKeyIndex(eKey);
     if(-1 < idx){
         entry& ent = _entries[idx];
@@ -265,7 +315,7 @@ _getDataReference(int eKey){
 }
 
 bool Config::
-_isEmptyLine(const std::string &str) const{
+_isEmptyLine(const std::string &str){
     for(char c : str){
         if( !isspace(c) ){ return false; }
     }
@@ -284,7 +334,7 @@ _buildErrorStringInvalidValue(int eKey) const{
 }
 
 bool Config::
-_isValidCharForFileName(char c) const{
+_isValidCharForFileName(char c){
     const char* valids = "_-./";
     size_t len = strlen(valids);
     if( isalnum(c) ){ return true; } //A-Z, a-z, 0-9
@@ -295,7 +345,7 @@ _isValidCharForFileName(char c) const{
 }
 
 bool Config::
-_isValidPath(const std::string &path) const{
+_isValidPath(const std::string &path){
     //the function restricts paths to these characters
     //safe
     //A-Z, a-z, 0-9
@@ -340,7 +390,7 @@ _trimComments(const std::string &str) const{
 int Config::
 _getKeyIndex(int eKey) const{
     for(size_t i=0; i<_entries.size(); ++i){
-        if( eKey == _entries[i].key_id ) return i;
+        if( eKey == _entries[i].key_id ){ return i; }
     }
     return -1;
 }
@@ -348,13 +398,14 @@ _getKeyIndex(int eKey) const{
 int Config::
 _getKeyIndex(const std::string &str) const{
     for(size_t i=0; i<_entries.size(); ++i){
-        if( str == _entries[i].key_str ) return i;
+        if( str == _entries[i].key_str ){ return i; }
     }
     return -1;
 }
 
 void Config::
-_processData(const std::string &data){
+_processData(const std::string &data)
+{
     std::stringstream ss(data);
     std::string line;
     std::string cfg;
@@ -378,7 +429,8 @@ _processData(const std::string &data){
 }
 
 void Config::
-_parseData(std::istream &stream){
+_parseData(std::istream &stream)
+{
     std::stringstream ss;
     std::string data;
     size_t expected_size = 0;
@@ -399,4 +451,116 @@ _parseData(std::istream &stream){
     data = data.substr(0, expected_size);
 
     _processData(data);
+}
+
+void Config::
+_writeData(std::ostream &stream)
+{
+    for(size_t i=0; i<_entries.size(); ++i){
+        entry& ent = _entries[i];
+        stream << ent.key_str << _sep_keyval << ent.val_str << "\n";
+    }
+}
+
+//--------------------------------------------------
+//                 ConfigFileReader
+//--------------------------------------------------
+
+ConfigFileReader::
+ConfigFileReader()
+{
+
+}
+
+ConfigFileReader::
+ConfigFileReader(const std::vector<Config *> configs)
+{
+    for(Config* current : configs){
+        registerConfig(current);
+    }
+}
+
+ConfigFileReader::
+~ConfigFileReader()
+{
+
+}
+
+void ConfigFileReader::
+registerConfig(Config *cfg)
+{
+    int idx;
+    if(cfg != nullptr){
+        idx = indexOfInVector(_configs, cfg);
+        if(idx < 0){
+            _configs.push_back(cfg);
+        }
+    }
+}
+
+void ConfigFileReader::
+readFile(const char *path)
+{
+    //read file into string
+    //for each found Config identifier
+        //switch state to write the appropriate Config
+        //reset the Config path variable
+    //dump temporary string
+}
+
+void ConfigFileReader::
+readFile(const std::string &path)
+{
+    readFile( path.c_str() );
+}
+
+void ConfigFileReader::
+writeFile(const char *path)
+{
+    std::string buffer;
+    for(size_t i=0; i<_configs.size(); ++i){
+        buffer = _configs[i]->writeS();
+
+
+
+
+
+        if( Config::_isValidPath(path) ){
+            std::ofstream ofs(path);
+            if( !ofs.good() ){
+                std::cerr << "error opening file " << path << " for reading\n";
+                return;
+            }
+            _writeData(ofs);
+            ofs.close();
+        }else{
+            /*
+            std::string errormsg = "invalid path defined";
+            errormsg += path;
+            throw std::invalid_argument( errormsg );
+            */
+            //not necessary to throw exception, because it isn't a crash-type problem
+            std::cerr << "ERROR: invalid path defined when writing config file: " << path << "\n";
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+}
+
+void ConfigFileReader::
+writeFile(const std::string &path)
+{
+    writeFile( path.c_str() );
 }
