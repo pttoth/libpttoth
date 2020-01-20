@@ -104,6 +104,14 @@ _trimComments(const std::string &str){
 
 
 //--------------------------------------------------
+//                    ICONFIG
+//--------------------------------------------------
+
+IConfig::
+~IConfig(){
+}
+
+//--------------------------------------------------
 //                    CONFIG
 //--------------------------------------------------
 
@@ -297,6 +305,23 @@ setI(int eKey, int i)
 
 
 std::string Config::
+writeToString() const
+{
+    std::string         retval;
+    std::ostringstream  oss(retval);
+    _writeData(oss);
+    return retval;
+}
+
+
+void Config::
+readFromString(std::string &str)
+{
+    _processData(str);
+}
+
+
+std::string Config::
 _getData(int eKey) const{
     int idx = _getKeyIndex(eKey);
     if(-1 < idx){
@@ -372,6 +397,18 @@ _processData(const std::string &data)
         }
     }
 }
+
+
+void Config::
+_writeData(std::ostream &stream) const
+{
+    for(size_t i=0; i<_entries.size(); ++i){
+        const entry& ent = _entries[i];
+        stream << ent.key_str << _sep_keyval << ent.val_str << "\n";
+    }
+}
+
+
 //--------------------------------------------------
 //                 ConfigFileReader
 //--------------------------------------------------
@@ -384,7 +421,7 @@ ConfigIOReadWriter()
 
 
 ConfigIOReadWriter::
-ConfigIOReadWriter(const std::vector<Config *> configs)
+ConfigIOReadWriter(const std::vector<IConfig *> configs)
 {
     for(Config* current : configs){
         registerConfig(current);
@@ -588,10 +625,11 @@ std::string ConfigIOReadWriter::
 void ConfigIOReadWriter::
 _parseData(std::istream &stream)
 {
-    std::stringstream ss;
-    std::string data;
-    size_t expected_size = 0;
-    std::string strbuf;
+    //read file to string
+    std::stringstream   ss;
+    std::string         data;
+    size_t              expected_size = 0;
+    std::string         strbuf;
 
     while( std::getline(stream, strbuf) ){
         if(0 < strbuf.length()){
@@ -602,19 +640,29 @@ _parseData(std::istream &stream)
 
     //running the code from QtCreator, there seems to be a bug,
     //  where ss.str() is longer than it should be and contains garbage at the end
-    //  couldn't find errors in the code, dunno if this is because Qt runs it with different dll-s
+    //  didn't find errors in the code
+    //    dunno if this is because Qt runs it with different dll-s
+    //    TODO: check whether the Qt dll-s write '\n' correctly in memory, or they do '\r\n'
     //this cuts off any possible bullshit from the end of the string
     data = ss.str();
     data = data.substr(0, expected_size);
 
-    _processData(data);
+//look for lines containing Config names
+    //use regex   \r?\n\[([^\r\n]*)\]\r?\n
+    //skip if failed and write a warning
+    //otherwise start checking the Config name
+        //use regex   [A-Za-z0-9\.\_\-\ ]+
+        //if fails, skip and write a warning
+        //otherwise set focus to appropriate Config
+
+//start parsing the rest of the string (only indexes) until you find another Config name, or EOF
+    //create a substring based on the index
+    //pass it to the Config with the focus
+    //set focus to new Config
+
+
+    //regexes
+
+
 }
 
-void ConfigIOReadWriter::
-_writeData(std::ostream &stream)
-{
-    for(size_t i=0; i<_entries.size(); ++i){
-        entry& ent = _entries[i];
-        stream << ent.key_str << _sep_keyval << ent.val_str << "\n";
-    }
-}
