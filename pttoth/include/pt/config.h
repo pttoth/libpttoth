@@ -31,20 +31,6 @@ public:
 
     void        addKey(int eKey, char const *name); //throws std::invalid_argument
 
-    void        read();                         //throws std::invalid_argument, std::logic_error
-    void        readF(char const *path);        //throws std::invalid_argument
-    void        readF(const std::string& path); //throws std::invalid_argument
-    void        readS(const std::string& str);  //throws std::invalid_argument
-
-    void        write();                                //throws std::invalid_argument, std::logic_error
-    void        writeF(char const *path);               //throws std::invalid_argument
-    void        writeF(const std::string& path);        //throws std::invalid_argument
-    std::string writeS();
-
-    void        setPath(const char* path);
-    void        setPath(const std::string& path);
-    std::string getPath() const;
-
     void        setName(const char* name);
     void        setName(const std::string& name);
     std::string getName() const;
@@ -65,63 +51,79 @@ public:
 
 private:
     struct entry{
-        int key_id;                 //the key's actual enum as integer
-        std::string  key_str;       //enum id as string
-        std::string  val_str;       //string value associated with key
+        int             key_id;        //the key's actual enum as integer
+        std::string     key_str;       //enum id as string
+        std::string     val_str;       //string value associated with key
     };
-
-    static const char*  _sep_keyval; //key-value spearator string
-    static const char*  _sep_valcom; //value-comment spearator string
 
     std::string         _name;      //name of the config object (used when mixing multiple configs in the same file)
     std::vector<entry>  _entries;   //the stored data
-    std::string         _path;      //file to read from and write to
 
     std::string         _getData(int eKey) const;
     std::string&        _getDataReference(int eKey);
 
-    static  bool            _isValidPath(const std::string& path);
-    static  bool            _isValidCharForFileName(char c);
-    static  bool            _isEmptyLine(const std::string& str);
-            std::string     _trimComments(const std::string& str) const;
-            std::string     _buildErrorStringInvalidValue(int eKey) const;
-            int             _getKeyIndex(int eKey) const;
-            int             _getKeyIndex(const std::string& str) const;
+    std::string         _buildErrorStringInvalidValue(int eKey) const;
 
+    int                 _getKeyIndex(int eKey) const;
+    int                 _getKeyIndex(const std::string& str) const;
 
     //after the config was read from any input, we have it in a string
     //this is the common processing function, which parses the expected
     //  data from the string
-    void _processData(const std::string& data);
-    void _parseData(std::istream& stream);
-    void _writeData(std::ostream& stream);
+    void                _processData(const std::string& data);
+
 };
 
 //--------------------------------------------------
-//                 ConfigFileReader
+//                ConfigIOReadWriter
 //--------------------------------------------------
 /**
  * @brief Used to mix separate Config classes into the same config file
  */
-class ConfigFileReader{
+class ConfigIOReadWriter{
     std::vector<Config*>    _configs;
     int                     _current_index;
 
-
 public:
-    ConfigFileReader();
-    ConfigFileReader(const std::vector<Config*> configs);
+    ConfigIOReadWriter();
+    ConfigIOReadWriter(const std::vector<Config*> configs);
 
-    virtual ~ConfigFileReader();
+    virtual ~ConfigIOReadWriter();
 
     void registerConfig(Config* cfg);
     //void unregisterConfig(Config* cfg);   //is there a relevant use case for this?
 
-    void readFile(const char* path);
-    void readFile(const std::string& path);
+    void            readFile(const char* path);
+    void            readFile(const std::string& path);
 
-    void writeFile(const char* path);
-    void writeFile(const std::string& path);
+    void            writeFile(const char* path);
+    void            writeFile(const std::string& path);
+
+    void            setPath(const char* path);
+    void            setPath(const std::string& path);
+    std::string     getPath() const;
+
+    //-----
+    //TODO: remove this
+        void        read();                         //throws std::invalid_argument, std::logic_error
+        void        readF(char const *path);        //throws std::invalid_argument
+        void        readF(const std::string& path); //throws std::invalid_argument
+        void        readS(const std::string& str);  //throws std::invalid_argument
+
+        void        write();                                //throws std::invalid_argument, std::logic_error
+        void        writeF(char const *path);               //throws std::invalid_argument
+        void        writeF(const std::string& path);        //throws std::invalid_argument
+        std::string writeS();
+    //-----
+        //-----
+        //TODO: remove this
+
+
+            void _parseData(std::istream& stream);
+            void _writeData(std::ostream& stream);
+        //-----
+private:
+    std::string         _path;      //file to read from and write to
 
 };
 
