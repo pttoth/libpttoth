@@ -196,7 +196,7 @@ public:
             (instance->*func)(args...);
         };
 
-        add_element( EventBase::data(static_cast<void*>(instance), static_cast<void*>(func), lambda) ); //FUNC_PARAMS
+        add_element( EventBase::data(reinterpret_cast<void*>(instance), reinterpret_cast<void*>(func), lambda) ); //FUNC_PARAMS
     }
 
     /**
@@ -208,7 +208,7 @@ public:
         if( nullptr == func ){
             throw std::invalid_argument("attempted to register nullptr as function");
         }
-        add_element( EventBase::data(nullptr, static_cast<void*>(func), func) );
+        add_element( EventBase::data(nullptr, reinterpret_cast<void*>(func), func) );
     }
 
     /**
@@ -224,7 +224,7 @@ public:
         }else if( nullptr == func ){
             throw std::invalid_argument("attempted to unregister nullptr as function");
         }
-        remove_element( EventBase::data(static_cast<void*>(instance), static_cast<void*>(func), nullptr) );
+        remove_element( EventBase::data(reinterpret_cast<void*>(instance), reinterpret_cast<void*>(func), nullptr) );
     }
 
     /**
@@ -236,7 +236,7 @@ public:
         if( nullptr == func ){
             throw std::invalid_argument("attempted to unregister nullptr as function");
         }
-        remove_element( EventBase::data(nullptr, static_cast<void*>(func), nullptr) );
+        remove_element( EventBase::data(nullptr, reinterpret_cast<void*>(func), nullptr) );
     }
 
     /**
@@ -251,7 +251,7 @@ public:
             throw std::invalid_argument("attempted to unregister nullptr as listener");
         }
 
-        EventBase::data d( static_cast<void*>(object), nullptr, nullptr);
+        EventBase::data d( reinterpret_cast<void*>(object), nullptr, nullptr);
 
         //loop until cannot find any more entries with 'target'
         int index = 0;
