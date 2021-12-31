@@ -31,6 +31,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     pttoth/include/pttoth/config.h \
+    pttoth/include/pttoth/array.h \
     pttoth/include/pttoth/math.h \
     pttoth/include/pttoth/math/bool1.h \
     pttoth/include/pttoth/math/bool2.h \
